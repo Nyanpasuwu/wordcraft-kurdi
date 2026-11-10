@@ -70,7 +70,7 @@ pub struct LangInfo {
 
 /// The languages WordCraft offers, when their catalogs are embedded. English first: it is the
 /// fallback and the source language.
-pub static LANGUAGES: [LangInfo; 28] = [
+pub static LANGUAGES: [LangInfo; 29] = [
     LangInfo { code: "en", prefer_hans: false, editing_lang: None },
     // Simplified Chinese; `zh`, `zh-CN`, `zh-SG` and `zh-Hans-*` resolve here (the crate's matching).
     LangInfo { code: "zh-hans", prefer_hans: true, editing_lang: None },
@@ -127,6 +127,9 @@ pub static LANGUAGES: [LangInfo; 28] = [
     // Arabic (Modern Standard); `ar` and every `ar-*` locale (`ar-MA`, `ar-EG`, `ar-SA` …) resolve
     // here. Right to left: see [`RTL_LANGUAGES`] and [`Lang::rtl`].
     LangInfo { code: "ar", prefer_hans: false, editing_lang: None },
+    // Central Kurdish (Sorani); `ckb`, `ckb-IQ` and `ckb_IQ.UTF-8` resolve here. Arabic script and
+    // right to left, like Arabic. WordCraft can't proof it, so documents keep the default language.
+    LangInfo { code: "ckb", prefer_hans: false, editing_lang: None },
     // Slovenian; `sl`, `sl-SI` and `sl_SI.UTF-8` resolve here.
     LangInfo { code: "sl", prefer_hans: false, editing_lang: None },
 ];
@@ -134,7 +137,7 @@ pub static LANGUAGES: [LangInfo; 28] = [
 /// Interface languages written right to left. Their catalogs are written in typing order and
 /// egui's text layout orders each line itself, so the lookups return them as they are; the window
 /// is mirrored ([`crate::rtl`]).
-const RTL_LANGUAGES: [&str; 1] = ["ar"];
+const RTL_LANGUAGES: [&str; 2] = ["ar", "ckb"];
 
 /// A language the UI can be shown in: English, or an offered language whose catalogs are embedded.
 #[derive(Clone, Copy)]
