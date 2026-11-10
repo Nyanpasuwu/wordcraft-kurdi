@@ -1210,7 +1210,14 @@ fn arabic_locales_and_saved_preference_work_without_changing_the_document() {
     assert_eq!(first_supported(["xx-XX", "ar-MA", "en-US"]), Some(ar));
     assert_eq!(normalize_pref("AR"), Some("ar"));
     assert!(ar.rtl());
-    assert!(Lang::all().filter(|l| l.rtl()).eq([ar]), "Arabic is the only right-to-left language");
+    // Arabic and Kurdish are written right to left; nothing else is, and Kurdish says so whenever
+    // its catalog is embedded, so a missing `RTL_LANGUAGES` entry fails here rather than mirroring
+    // the window the wrong way.
+    let rtl: Vec<&str> = Lang::all().filter(|l| l.rtl()).map(Lang::code).collect();
+    assert!(rtl.iter().all(|c| matches!(*c, "ar" | "ckb")), "only the right-to-left languages are marked: {rtl:?}");
+    if let Some(ckb) = Lang::from_code("ckb") {
+        assert!(ckb.rtl(), "Central Kurdish is written right to left");
+    }
     assert!(!ar.uses_cjk());
     let mut app = crate::WordApp::new(wordcraft_engine::Session::new(wordcraft_engine::sample::sample_document()), Default::default());
     let before = serde_json::to_value(&app.session.doc).unwrap();
